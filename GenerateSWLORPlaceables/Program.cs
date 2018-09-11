@@ -16,7 +16,7 @@ namespace GenerateSWLORPlaceables
             string[] lines = File.ReadAllLines("./placeables.2da");
             byte[] template = File.ReadAllBytes("./template.utp");
             
-            List<string> names = new List<string>();
+            List<Tuple<string, int>> records = new List<Tuple<string, int>>();
 
             for(int x = 2; x <= lines.Length-1; x++)
             {
@@ -28,7 +28,7 @@ namespace GenerateSWLORPlaceables
                 if (name.Contains("****")) continue;
                 if (!name.Contains(NameFilter)) continue;
 
-                names.Add(name);
+                records.Add(new Tuple<string, int>(name, x));
 
             }
 
@@ -43,8 +43,10 @@ namespace GenerateSWLORPlaceables
             }
 
             int id = 487; // start at 487 since the first batch stopped there
-            foreach (var name in names)
+            foreach (var record in records)
             {
+                string name = record.Item1;
+                int index = record.Item2;
                 string paddedName = name.PadRight(85);
                 string tag = "swlor_" + (id.ToString().PadLeft(4, '0'));
                 byte[] outputData = new byte[template.Length];
@@ -70,7 +72,7 @@ namespace GenerateSWLORPlaceables
                 Console.WriteLine("swlor_xxxx");
 
                 // Fix the appearance
-                byte[] appearanceBytes = BitConverter.GetBytes(29999 + id);
+                byte[] appearanceBytes = BitConverter.GetBytes(index);
                 outputData[364] = appearanceBytes[0];
                 outputData[365] = appearanceBytes[1];
                 outputData[366] = appearanceBytes[2];

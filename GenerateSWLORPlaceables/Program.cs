@@ -11,14 +11,14 @@ namespace GenerateSWLORPlaceables
     {
         static void Main(string[] args)
         {
-            int start = 30000;
 
+            const string NameFilter = "[mdrn]";
             string[] lines = File.ReadAllLines("./placeables.2da");
             byte[] template = File.ReadAllBytes("./template.utp");
             
             List<string> names = new List<string>();
 
-            for(int x = start; x <= lines.Length-1; x++)
+            for(int x = 2; x <= lines.Length-1; x++)
             {
                 var line = lines[x];
                 string name = line.Substring(8, 100);
@@ -26,6 +26,7 @@ namespace GenerateSWLORPlaceables
                 name = name.Trim();
 
                 if (name.Contains("****")) continue;
+                if (!name.Contains(NameFilter)) continue;
 
                 names.Add(name);
 
@@ -41,7 +42,7 @@ namespace GenerateSWLORPlaceables
                 File.Delete(file);
             }
 
-            int id = 1;
+            int id = 487; // start at 487 since the first batch stopped there
             foreach (var name in names)
             {
                 string paddedName = name.PadRight(85);
@@ -56,7 +57,7 @@ namespace GenerateSWLORPlaceables
                     Console.Write((char)outputData[x]);
                 }
                 Console.WriteLine();
-                Console.WriteLine("[SWLOR] XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                Console.WriteLine("[MDRN] XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 
 
                 // Fix the tag
